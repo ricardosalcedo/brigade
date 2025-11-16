@@ -1,4 +1,4 @@
-# 🎖️ BRIGADE - Coordinated Code Intelligence
+# 🎖️ BRIGADE - Coordinated Code Intelligence (WIP)
 
 **Where specialized AI agents unite for comprehensive code analysis and enhancement.**
 
