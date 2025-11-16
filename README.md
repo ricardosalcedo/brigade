@@ -56,10 +56,18 @@ Deploy specialized analysis agents for comprehensive code review:
 ```
 
 ### **Auto-Fix Brigade**
-Deploy fix agents with automated PR creation:
+Deploy fix agents with automated PR creation (requires human approval):
 ```bash
-./brigade auto-fix myfile.py --create-pr
-./brigade auto-fix myfile.py --dry-run  # Preview fixes
+./brigade auto-fix myfile.py --create-pr  # Requests approval before creating PR
+./brigade auto-fix myfile.py --dry-run    # Preview fixes without approval
+```
+
+### **Approval Management**
+Manage pending PR approvals for safety:
+```bash
+./brigade approve --list                  # List pending approvals
+./brigade approve --approve <ID>          # Approve specific request
+./brigade approve --deny <ID>             # Deny specific request
 ```
 
 ### **Coordinated Brigade**
@@ -70,7 +78,47 @@ Deploy full multi-agent coordination:
 ./brigade deploy myfile.py --mode full        # Complete brigade deployment
 ```
 
-## 🤖 Agent Specializations
+## 🛡️ Human Approval Workflow
+
+BRIGADE includes a safety mechanism requiring human approval before creating pull requests:
+
+### **Approval Process**
+1. **Analysis**: BRIGADE analyzes code and generates fixes
+2. **Preview**: Shows proposed fixes with quality impact
+3. **Human Review**: Requests approval with detailed information
+4. **Decision**: Human approves, denies, or saves for later
+5. **Execution**: Only approved fixes create pull requests
+
+### **Interactive Approval**
+```
+🎖️ BRIGADE PR Approval Required
+==================================================
+📁 File: example.py
+📊 Quality Score: 4/10
+🔧 Fixes Proposed: 3
+
+🛠️ Proposed Fixes:
+   1. Replace eval() with ast.literal_eval() for security
+   2. Add context managers for file operations  
+   3. Fix style issues with None comparisons
+
+📈 Expected Quality Improvement: +3 points
+
+❓ Approve PR creation for these fixes?
+   [y]es / [n]o / [d]etails / [s]ave for later:
+```
+
+### **Approval Commands**
+```bash
+# List all pending approvals
+./brigade approve --list
+
+# Approve a specific request
+./brigade approve --approve approval_20241116_143022
+
+# Deny a specific request  
+./brigade approve --deny approval_20241116_143022
+```
 
 BRIGADE deploys specialized agents for different aspects of code intelligence:
 

@@ -1,20 +1,22 @@
-"""Auto-fix workflow implementation"""
+"""Auto-fix workflow implementation with human approval"""
 
 from typing import Dict, Any
 from core.config import Config
 from core.base import AnalysisResult
 from core.exceptions import AnalysisError, FixGenerationError
+from core.approval import ApprovalManager
 from analyzers.unified_analyzer import UnifiedAnalyzer
 
 class AutoFixWorkflow:
-    """Auto-fix workflow implementation"""
+    """Auto-fix workflow implementation with human approval gate"""
     
     def __init__(self, config: Config):
         self.config = config
         self.analyzer = UnifiedAnalyzer(config.to_dict())
+        self.approval_manager = ApprovalManager()
     
     def execute(self, file_path: str, **kwargs) -> Dict[str, Any]:
-        """Execute auto-fix workflow"""
+        """Execute auto-fix workflow with approval gate"""
         
         try:
             # Step 1: Analyze
@@ -30,18 +32,38 @@ class AutoFixWorkflow:
             # Step 2: Generate fixes (simplified for now)
             fixes = self._generate_fixes(analysis)
             
-            # Step 3: Apply fixes if not dry run
+            # Step 3: Show preview and request approval if creating PR
+            if kwargs.get('create_pr', False) and not kwargs.get('dry_run', False):
+                
+                # Request human approval for PR creation
+                approved = self.approval_manager.request_pr_approval(
+                    file_path, 
+                    fixes, 
+                    self._format_analysis(analysis)
+                )
+                
+                if not approved:
+                    return {
+                        'success': True,
+                        'message': 'Fixes generated but PR creation not approved',
+                        'fixes_available': len(fixes),
+                        'analysis': self._format_analysis(analysis),
+                        'approval_status': 'denied'
+                    }
+            
+            # Step 4: Apply fixes if not dry run
             if not kwargs.get('dry_run', False):
                 fixed_file = self._apply_fixes(file_path, fixes)
                 
-                # Step 4: Create PR if requested
+                # Step 5: Create PR if approved
                 if kwargs.get('create_pr', False):
                     pr_url = self._create_pull_request(file_path, fixes)
                     return {
                         'success': True,
                         'pr_url': pr_url,
                         'fixes_applied': len(fixes),
-                        'analysis': self._format_analysis(analysis)
+                        'analysis': self._format_analysis(analysis),
+                        'approval_status': 'approved'
                     }
             
             return {

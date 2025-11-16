@@ -9,10 +9,11 @@ from .interfaces import ICodeAnalyzer, IFixGenerator, ITestRunner, IPRManager
 from .exceptions import AnalysisError, FixGenerationError, TestFailureError, PRCreationError
 from .config import Config
 from .utils import FileUtils, GitUtils, LLMUtils
+from .approval import ApprovalManager
 
 __all__ = [
     'BaseAnalyzer', 'BaseAgent', 'BaseTool',
     'ICodeAnalyzer', 'IFixGenerator', 'ITestRunner', 'IPRManager',
     'AnalysisError', 'FixGenerationError', 'TestFailureError', 'PRCreationError',
-    'Config', 'FileUtils', 'GitUtils', 'LLMUtils'
+    'Config', 'FileUtils', 'GitUtils', 'LLMUtils', 'ApprovalManager'
 ]
