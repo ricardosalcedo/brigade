@@ -252,13 +252,102 @@ export DEFAULT_BRANCH=main
 - **🛡️ Reliability**: Robust error handling and recovery
 - **📈 Excellence**: Continuous improvement and learning
 
+## 🧪 Development & Testing
+
+### **Running Tests**
+```bash
+# Run complete test suite
+python3 run_tests.py
+
+# Run specific test categories
+python3 -m pytest tests/unit/ -v          # Unit tests
+python3 -m pytest tests/integration/ -v   # Integration tests
+
+# Run with coverage
+python3 -m pytest --cov=core --cov=analyzers --cov=workflows
+```
+
+### **Code Quality Checks**
+```bash
+# Format code
+python3 -m black core/ analyzers/ workflows/
+
+# Sort imports
+python3 -m isort core/ analyzers/ workflows/
+
+# Style checks
+flake8 core/ analyzers/ workflows/ --max-line-length=100
+
+# Type checking
+mypy core/ analyzers/ workflows/ --ignore-missing-imports
+```
+
+### **Pre-commit Hooks**
+BRIGADE automatically runs tests before every commit to ensure code quality:
+
+```bash
+# Normal commit (tests must pass)
+git add .
+git commit -m "Your changes"
+
+# Bypass hook if needed (use sparingly)
+git commit --no-verify -m "Emergency fix"
+```
+
+**Pre-commit Hook Features:**
+- ✅ Runs complete test suite before commit
+- ✅ Blocks commits if tests fail
+- ✅ Shows detailed test output
+- ✅ Ensures code quality standards
+
+### **GitHub Actions Locally**
+Run the same CI/CD pipeline locally using `act`:
+
+```bash
+# Install act
+brew install act
+
+# Run GitHub Actions locally
+act -j test                    # Run test job
+act -j security               # Run security checks
+act -j quality                # Run code quality checks
+
+# Run all workflows
+act
+```
+
+### **Test Structure**
+```
+tests/
+├── unit/                     # Unit tests
+│   ├── test_config.py       # Configuration tests
+│   ├── test_approval.py     # Approval workflow tests
+│   ├── test_static_analyzer.py # Static analysis tests
+│   └── test_auto_fix_workflow.py # Auto-fix tests
+├── integration/             # Integration tests
+│   └── test_brigade_cli.py  # CLI integration tests
+└── fixtures/                # Test data and fixtures
+```
+
+### **Continuous Integration**
+BRIGADE uses GitHub Actions for automated testing:
+
+- **✅ Multi-Python Testing**: Tests on Python 3.8, 3.9, 3.10, 3.11
+- **✅ Code Quality**: Black, isort, flake8, mypy checks
+- **✅ Security Scanning**: Bandit and safety checks
+- **✅ Test Coverage**: Comprehensive unit and integration tests
+
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. **Run tests locally**: `python3 run_tests.py`
+4. **Ensure code quality**: Format with black, check with flake8
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+**Note**: The pre-commit hook will automatically run tests before each commit to maintain code quality.
 
 ## 📄 License
 
