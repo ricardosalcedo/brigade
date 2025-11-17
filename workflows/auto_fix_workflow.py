@@ -52,7 +52,7 @@ class AutoFixWorkflow:
 
             # Step 4: Apply fixes if not dry run
             if not kwargs.get("dry_run", False):
-                fixed_file = self._apply_fixes(file_path, fixes)
+                _ = self._apply_fixes(file_path, fixes)
 
                 # Step 5: Create PR if approved
                 if kwargs.get("create_pr", False):

@@ -26,7 +26,7 @@ class ApprovalManager:
 
         # Show proposed fixes
         if fixes:
-            print(f"\n🛠️ Proposed Fixes:")
+            print("🛠️ Proposed Fixes:")
             for i, fix in enumerate(fixes[:5], 1):
                 issue_desc = fix.get(
                     "issue_description", fix.get("description", "Code improvement")
@@ -43,8 +43,8 @@ class ApprovalManager:
             )
 
         # Request approval
-        print(f"\n❓ Approve PR creation for these fixes?")
-        print(f"   This will create a pull request with the proposed changes.")
+        print("❓ Approve PR creation for these fixes?")
+        print("   This will create a pull request with the proposed changes.")
 
         while True:
             try:

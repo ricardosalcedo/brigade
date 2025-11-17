@@ -1,13 +1,10 @@
 """Workflow manager for orchestrating different analysis workflows"""
 
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from analyzers.unified_analyzer import UnifiedAnalyzer
-from core.base import AnalysisResult
 from core.config import Config
-from core.exceptions import AnalysisError
-from core.interfaces import ICodeAnalyzer, IFixGenerator, IPRManager, ITestRunner
 
 
 class WorkflowType(Enum):
@@ -153,7 +150,7 @@ class WorkflowManager:
 
             boto3.client("bedrock-runtime", region_name=self.config.aws_region)
             return True
-        except:
+        except Exception:
             return False
 
     def _check_git_available(self) -> bool:

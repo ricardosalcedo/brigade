@@ -1,7 +1,6 @@
 """Utility functions for the code analyzer"""
 
 import json
-import os
 import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Optional

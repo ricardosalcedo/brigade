@@ -162,7 +162,14 @@ class TestAnalyzer(BaseAnalyzer):
 
     def _estimate_complexity(self, code: str) -> int:
         """Estimate code complexity (simplified)"""
-        complexity_indicators = ["if ", "for ", "while ", "try:", "except:", "elif "]
+        complexity_indicators = [
+            "if ",
+            "for ",
+            "while ",
+            "try:",
+            "except Exception:",
+            "elif ",
+        ]
         return sum(code.count(indicator) for indicator in complexity_indicators)
 
     def _analyze_dependencies(self, code: str, language: str) -> List[str]:
@@ -236,7 +243,10 @@ class TestAnalyzer(BaseAnalyzer):
             issues.append(
                 {
                     "type": "structure",
-                    "description": "No functions or classes found - consider refactoring into testable units",
+                    "description": (
+                        "No functions or classes found - consider refactoring "
+                        "into testable units"
+                    ),
                 }
             )
 
@@ -244,7 +254,10 @@ class TestAnalyzer(BaseAnalyzer):
             issues.append(
                 {
                     "type": "complexity",
-                    "description": f'High complexity ({factors["complexity"]}) makes testing difficult',
+                    "description": (
+                        f'High complexity ({factors["complexity"]}) makes '
+                        "testing difficult"
+                    ),
                 }
             )
 
@@ -252,7 +265,10 @@ class TestAnalyzer(BaseAnalyzer):
             issues.append(
                 {
                     "type": "side_effects",
-                    "description": "File I/O operations detected - consider dependency injection for testing",
+                    "description": (
+                        "File I/O operations detected - consider dependency "
+                        "injection for testing"
+                    ),
                 }
             )
 
@@ -260,7 +276,10 @@ class TestAnalyzer(BaseAnalyzer):
             issues.append(
                 {
                     "type": "side_effects",
-                    "description": "Network calls detected - consider mocking for reliable tests",
+                    "description": (
+                        "Network calls detected - consider mocking for "
+                        "reliable tests"
+                    ),
                 }
             )
 
@@ -387,7 +406,7 @@ class TestAnalyzer(BaseAnalyzer):
             test_code = f"""def test_{func_name}_basic():
     \"\"\"Test basic functionality of {func_name}\"\"\"
     # TODO: Add test implementation
-    # result = {func_name}(test_input)
+    # _ = {func_name}(test_input)
     # assert result == expected_output
     pass
 """
@@ -423,7 +442,7 @@ class TestAnalyzer(BaseAnalyzer):
 
         test_code = f"""class Test{class_name}:
     \"\"\"Test cases for {class_name} class\"\"\"
-    
+
     def setup_method(self):
         \"\"\"Set up test fixtures\"\"\"
         self.instance = {class_name}()
@@ -451,7 +470,7 @@ class TestAnalyzer(BaseAnalyzer):
             cmd.extend(["--cov=.", "--cov-report=json"])
 
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+            _ = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
 
             # Parse pytest output
             output = result.stdout + result.stderr
@@ -475,7 +494,7 @@ class TestAnalyzer(BaseAnalyzer):
                         coverage_pct = cov_data.get("totals", {}).get(
                             "percent_covered", 0
                         )
-                except:
+                except Exception:
                     pass
 
             return TestResult(
@@ -496,7 +515,7 @@ class TestAnalyzer(BaseAnalyzer):
                 test_count=0,
                 failures=["Timeout"],
             )
-        except Exception as e:
+        except Exception:
             return TestResult(
                 passed=False,
                 output=f"Test execution failed: {e}",
@@ -531,7 +550,7 @@ class TestAnalyzer(BaseAnalyzer):
                 f"--cov={source_path}",
                 "--cov-report=json",
             ]
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            _ = subprocess.run(cmd, capture_output=True, text=True)
 
             if os.path.exists("coverage.json"):
                 with open("coverage.json", "r") as f:
@@ -558,7 +577,7 @@ class TestAnalyzer(BaseAnalyzer):
                     "recommendations": recommendations,
                 }
 
-        except Exception as e:
+        except Exception:
             pass
 
         return {
