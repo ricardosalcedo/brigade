@@ -48,6 +48,14 @@ chmod +x brigade
 
 ## 🎖️ Brigade Commands
 
+### **Repository Analysis**
+Analyze entire repositories without context overflow:
+```bash
+./brigade repo . --output full-analysis.json
+./brigade repo /path/to/large-repo --report repo-report.md
+./brigade repo . --max-chunk-size 30000 --max-files-per-chunk 15
+```
+
 ### **Analysis Brigade**
 Deploy specialized analysis agents for comprehensive code review:
 ```bash
@@ -515,6 +523,82 @@ export DEFAULT_BRANCH=main
 - **⚡ Efficiency**: Optimized workflows for maximum impact
 - **🛡️ Reliability**: Robust error handling and recovery
 - **📈 Excellence**: Continuous improvement and learning
+
+## 🔍 Full Repository Analysis (No Context Limits)
+
+BRIGADE can analyze entire repositories of any size using intelligent chunking strategies that avoid AI context overflow:
+
+### **🧠 Chunking Strategy**
+- **File Categorization**: Automatically categorizes files (core, tests, config, docs, build)
+- **Size Management**: Splits analysis into manageable chunks (default: 50KB per chunk)
+- **Priority Processing**: Analyzes core code first, then tests, then supporting files
+- **Parallel Processing**: Uses multiple workers for faster analysis
+- **Context Preservation**: Maintains repository-wide insights across chunks
+
+### **📊 Repository Analysis Features**
+```bash
+# Analyze entire repository
+./brigade repo /path/to/large-repo
+
+# Customize chunking parameters
+./brigade repo . --max-chunk-size 30000 --max-files-per-chunk 15
+
+# Generate comprehensive report
+./brigade repo . --report repo-analysis.md --output detailed-results.json
+
+# Focus on specific categories
+./brigade repo . --categories core tests --verbose
+
+# Parallel processing control
+./brigade repo . --parallel-workers 5
+```
+
+### **🎯 Repository Insights**
+BRIGADE provides repository-wide insights including:
+- **Overall Quality Score**: Aggregated across all files
+- **Language Distribution**: Breakdown by programming languages
+- **Issue Patterns**: Common problems across the codebase
+- **Architecture Analysis**: Structure and organization insights
+- **Technical Debt Assessment**: Prioritized improvement recommendations
+
+### **📈 Example Repository Analysis**
+```
+🎖️ BRIGADE Repository Analysis
+📁 Target: ./my-large-project
+⚙️ Max chunk size: 50000 bytes
+📊 Max files per chunk: 20
+
+🔍 Discovering repository structure...
+
+📊 Repository Analysis Complete
+📁 Total files: 247
+🔤 Languages: Python, JavaScript, TypeScript, CSS
+⭐ Overall quality: 7.2/10
+
+💡 Key Insights:
+   ⚡ Good code quality with room for targeted improvements
+   🧪 Low test-to-code ratio - consider expanding test coverage
+   🔧 Performance optimization opportunities identified
+
+🎯 Recommendations:
+   1. Implement code quality standards and linting
+   2. Set up automated code formatting (black, prettier)
+   3. Refactor complex functions for better maintainability
+   4. Set up continuous quality monitoring with BRIGADE
+
+💾 Results saved to analysis-results.json
+📄 Report generated: repo-analysis.md
+```
+
+### **🏗️ How It Works**
+
+1. **Discovery Phase**: Scans repository and categorizes all files
+2. **Chunking Phase**: Groups files into analysis chunks by category and size
+3. **Analysis Phase**: Processes chunks in parallel with priority ordering
+4. **Synthesis Phase**: Combines results using AI to generate repository-wide insights
+5. **Reporting Phase**: Creates comprehensive reports and actionable recommendations
+
+This approach allows BRIGADE to analyze repositories with thousands of files while maintaining context and providing meaningful insights.
 
 ## 🧪 Development & Testing
 
