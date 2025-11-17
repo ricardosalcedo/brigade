@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# BRIGADE Pre-commit Hook Manager
+
+case "$1" in
+    "mode")
+        if [ -z "$2" ]; then
+            echo "Current mode: $(grep HOOK_MODE .brigade-hooks.conf | cut -d'=' -f2)"
+            echo "Available modes: act, local, fast"
+        else
+            sed -i '' "s/HOOK_MODE=.*/HOOK_MODE=$2/" .brigade-hooks.conf
+            echo "Hook mode set to: $2"
+        fi
+        ;;
+        
+    "test")
+        echo "Testing pre-commit hook..."
+        .git/hooks/pre-commit
+        ;;
+        
+    "install")
+        chmod +x .git/hooks/pre-commit
+        echo "Pre-commit hook installed and made executable"
+        ;;
+        
+    "status")
+        echo "BRIGADE Pre-commit Hook Status"
+        echo "=============================="
+        echo "Hook file: $([ -f .git/hooks/pre-commit ] && echo "✅ Exists" || echo "❌ Missing")"
+        echo "Executable: $([ -x .git/hooks/pre-commit ] && echo "✅ Yes" || echo "❌ No")"
+        echo "Docker: $(docker info > /dev/null 2>&1 && echo "✅ Running" || echo "❌ Not running")"
+        echo "Act: $(which act > /dev/null && echo "✅ Installed" || echo "❌ Not installed")"
+        echo ""
+        if [ -f .brigade-hooks.conf ]; then
+            echo "Configuration:"
+            cat .brigade-hooks.conf | grep -v "^#" | grep -v "^$"
+        fi
+        ;;
+        
+    *)
+        echo "BRIGADE Pre-commit Hook Manager"
+        echo ""
+        echo "Usage: $0 <command>"
+        echo ""
+        echo "Commands:"
+        echo "  mode [fast|local|act]  - Get or set hook mode"
+        echo "  test                   - Test the pre-commit hook"
+        echo "  install                - Install and enable the hook"
+        echo "  status                 - Show hook status and configuration"
+        echo ""
+        echo "Examples:"
+        echo "  $0 mode fast          # Set to fast mode (default)"
+        echo "  $0 mode act           # Set to full GitHub Actions mode"
+        echo "  $0 test               # Test the current hook"
+        echo "  $0 status             # Check hook status"
+        ;;
+esac
