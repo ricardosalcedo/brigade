@@ -105,6 +105,8 @@ Examples:
         approval_parser.add_argument('--list', action='store_true', help='List pending approvals')
         approval_parser.add_argument('--approve', help='Approve specific request by ID')
         approval_parser.add_argument('--deny', help='Deny specific request by ID')
+        approval_parser.add_argument('--config', help='Configuration file path')
+        approval_parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output')
         
         return parser
     
