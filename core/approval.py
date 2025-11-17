@@ -118,7 +118,7 @@ class ApprovalManager:
         }
 
         # Save to file
-        approval_file = f"pending_approvals.json"
+        approval_file = "pending_approvals.json"
         try:
             # Load existing approvals
             try:

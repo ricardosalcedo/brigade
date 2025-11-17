@@ -446,11 +446,11 @@ class TestAnalyzer(BaseAnalyzer):
     def setup_method(self):
         \"\"\"Set up test fixtures\"\"\"
         self.instance = {class_name}()
-    
+
     def test_{class_name.lower()}_creation(self):
         \"\"\"Test {class_name} instance creation\"\"\"
         assert self.instance is not None
-    
+
     # TODO: Add more specific test methods for class behavior
 """
 
@@ -470,7 +470,7 @@ class TestAnalyzer(BaseAnalyzer):
             cmd.extend(["--cov=.", "--cov-report=json"])
 
         try:
-            _ = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
 
             # Parse pytest output
             output = result.stdout + result.stderr
@@ -515,7 +515,7 @@ class TestAnalyzer(BaseAnalyzer):
                 test_count=0,
                 failures=["Timeout"],
             )
-        except Exception:
+        except Exception as e:
             return TestResult(
                 passed=False,
                 output=f"Test execution failed: {e}",
