@@ -62,6 +62,24 @@ Examples:
         deploy_parser.add_argument('--mode', choices=['analysis', 'coordinated', 'full'], 
                                   default='coordinated', help='Brigade deployment mode')
         
+        # Repository analysis command
+        repo_parser = subparsers.add_parser('repo', help='Analyze entire repository')
+        repo_parser.add_argument('path', help='Repository path to analyze')
+        repo_parser.add_argument('--max-chunk-size', type=int, default=50000,
+                               help='Maximum chunk size in bytes')
+        repo_parser.add_argument('--max-files-per-chunk', type=int, default=20,
+                               help='Maximum files per chunk')
+        repo_parser.add_argument('--output', '-o', help='Save results to JSON file')
+        repo_parser.add_argument('--report', help='Generate markdown report')
+        repo_parser.add_argument('--parallel-workers', type=int, default=3,
+                               help='Number of parallel analysis workers')
+        repo_parser.add_argument('--categories', nargs='+', 
+                               choices=['core', 'tests', 'config', 'docs', 'build', 'other'],
+                               help='Analyze only specific categories')
+        repo_parser.add_argument('--config', help='Configuration file path')
+        repo_parser.add_argument('--verbose', '-v', action='store_true',
+                               help='Verbose output')
+        
         # Approval command (manage pending approvals)
         approval_parser = subparsers.add_parser('approve', help='Manage pending PR approvals')
         approval_parser.add_argument('--list', action='store_true', help='List pending approvals')
@@ -101,6 +119,8 @@ Examples:
                 return self._deploy_autofix_brigade(args)
             elif args.command == 'deploy':
                 return self._deploy_coordinated_brigade(args)
+            elif args.command == 'repo':
+                return self._analyze_repository(args)
             elif args.command == 'approve':
                 return self._manage_approvals(args)
             else:
@@ -230,6 +250,104 @@ Examples:
             return 1
         
         return 0
+    
+    def _analyze_repository(self, args):
+        """Analyze entire repository with chunking"""
+        from analyzers.repo_analyzer import RepositoryAnalyzer
+        
+        print(f"🎖️ BRIGADE Repository Analysis")
+        print(f"📁 Target: {args.path}")
+        print(f"⚙️ Max chunk size: {args.max_chunk_size} bytes")
+        print(f"📊 Max files per chunk: {args.max_files_per_chunk}")
+        
+        try:
+            analyzer = RepositoryAnalyzer(
+                max_chunk_size=args.max_chunk_size,
+                max_files_per_chunk=args.max_files_per_chunk
+            )
+            
+            if args.verbose:
+                print("🔍 Discovering repository structure...")
+            
+            results = analyzer.analyze_repository(args.path)
+            
+            # Display summary
+            repo_summary = results['repository_summary']
+            print(f"\n📊 Repository Analysis Complete")
+            print(f"📁 Total files: {repo_summary['total_files']}")
+            print(f"🔤 Languages: {', '.join(repo_summary['languages'])}")
+            print(f"⭐ Overall quality: {repo_summary['overall_quality']:.1f}/10")
+            
+            # Show insights
+            print(f"\n💡 Key Insights:")
+            for insight in results['insights']:
+                print(f"   {insight}")
+            
+            # Show recommendations
+            print(f"\n🎯 Recommendations:")
+            for rec in results['recommendations']:
+                print(f"   {rec}")
+            
+            # Save results if requested
+            if args.output:
+                with open(args.output, 'w') as f:
+                    json.dump(results, f, indent=2)
+                print(f"💾 Results saved to {args.output}")
+            
+            # Generate report if requested
+            if args.report:
+                self._generate_repo_report(results, args.report)
+                print(f"📄 Report generated: {args.report}")
+            
+            return 0
+            
+        except Exception as e:
+            print(f"❌ Repository analysis failed: {e}")
+            if args.verbose:
+                import traceback
+                traceback.print_exc()
+            return 1
+    
+    def _generate_repo_report(self, results, report_path):
+        """Generate markdown report for repository analysis"""
+        repo_summary = results['repository_summary']
+        
+        report = f"""# 🎖️ BRIGADE Repository Analysis Report
+
+## 📊 Repository Overview
+- **Total Files**: {repo_summary['total_files']}
+- **Languages**: {', '.join(repo_summary['languages'])}
+- **Overall Quality**: {repo_summary['overall_quality']:.1f}/10
+
+## 💡 Key Insights
+"""
+        
+        for insight in results['insights']:
+            report += f"- {insight}\n"
+        
+        report += "\n## 🎯 Recommendations\n"
+        for rec in results['recommendations']:
+            report += f"- {rec}\n"
+        
+        report += "\n## 📋 Analysis by Category\n"
+        for category, summary in results['analysis_by_category'].items():
+            report += f"\n### {category.title()}\n"
+            report += f"- Files: {summary.get('file_count', 0)}\n"
+            report += f"- Average Quality: {summary.get('average_quality', 0):.1f}/10\n"
+            
+            if summary.get('issue_summary'):
+                report += "- Issues:\n"
+                for issue_type, count in summary['issue_summary'].items():
+                    report += f"  - {issue_type}: {count}\n"
+        
+        report += f"\n## 🔍 Issue Summary\n"
+        for issue_type, count in results['issue_summary'].items():
+            report += f"- **{issue_type}**: {count} issues\n"
+        
+        report += f"\n---\n*Generated by BRIGADE Repository Analyzer*"
+        
+        with open(report_path, 'w') as f:
+            f.write(report)
     
     def _analyze_directory(self, directory: str, recursive: bool) -> Dict[str, Any]:
         """Analyze all files in directory"""
