@@ -7,7 +7,12 @@ from analyzers.unified_analyzer import UnifiedAnalyzer
 from core.base import AnalysisResult
 from core.config import Config
 from core.exceptions import AnalysisError
-from core.interfaces import ICodeAnalyzer, IFixGenerator, IPRManager, ITestRunner
+from core.interfaces import (
+    ICodeAnalyzer,
+    IFixGenerator,
+    IPRManager,
+    ITestRunner,
+)
 
 
 class WorkflowType(Enum):
@@ -99,7 +104,12 @@ class WorkflowManager:
             WorkflowType.AUTO_FIX: {
                 "name": "Auto-Fix",
                 "description": "Complete workflow with automated fixes and PR creation",
-                "features": ["Analysis", "Fix generation", "Testing", "PR creation"],
+                "features": [
+                    "Analysis",
+                    "Fix generation",
+                    "Testing",
+                    "PR creation",
+                ],
             },
             WorkflowType.STRANDS_COORDINATED: {
                 "name": "Strands Coordinated",
@@ -127,8 +137,15 @@ class WorkflowManager:
 
         workflow_requirements = {
             WorkflowType.ANALYSIS_ONLY: ["aws_credentials"],
-            WorkflowType.AUTO_FIX: ["aws_credentials", "git_available", "github_cli"],
-            WorkflowType.STRANDS_COORDINATED: ["aws_credentials", "git_available"],
+            WorkflowType.AUTO_FIX: [
+                "aws_credentials",
+                "git_available",
+                "github_cli",
+            ],
+            WorkflowType.STRANDS_COORDINATED: [
+                "aws_credentials",
+                "git_available",
+            ],
         }
 
         needed = workflow_requirements.get(workflow_type, [])
