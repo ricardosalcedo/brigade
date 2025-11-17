@@ -194,6 +194,252 @@ BRIGADE/
 └── brigade                 # 🎖️ Main BRIGADE command
 ```
 
+## 👥 Team Usage & Workflows
+
+### **Team Setup**
+```bash
+# Team lead sets up BRIGADE for the team
+git clone https://github.com/ricardosalcedo/brigade.git
+cd brigade
+
+# Configure team-wide settings
+export BRIGADE_TEAM_CONFIG="team-config.json"
+export QUALITY_THRESHOLD=7
+export GITHUB_TOKEN="your_team_token"
+
+# Share configuration with team
+cp brigade-team-config.json.example brigade-team-config.json
+```
+
+### **Daily Team Workflows**
+
+#### **🔍 Pre-Review Analysis**
+Before code reviews, teams can run coordinated analysis:
+```bash
+# Analyze entire feature branch
+./brigade analyze feature-branch/ --recursive --report team-review.md
+
+# Generate team dashboard
+./brigade analyze src/ --output team-dashboard.json --format dashboard
+
+# Multi-developer analysis
+./brigade deploy . --mode team --assignees "dev1,dev2,dev3"
+```
+
+#### **📋 Sprint Planning Integration**
+```bash
+# Analyze technical debt for sprint planning
+./brigade analyze . --recursive --focus technical-debt --output sprint-analysis.json
+
+# Estimate fix effort for backlog items
+./brigade analyze backlog-files/ --estimate-effort --output effort-estimates.json
+
+# Generate improvement roadmap
+./brigade deploy . --mode roadmap --output team-roadmap.md
+```
+
+#### **🚀 Continuous Integration**
+```bash
+# Pre-merge quality gate
+./brigade analyze changed-files --quality-gate --threshold 7
+
+# Automated team fixes (requires approval)
+./brigade auto-fix . --team-mode --create-pr --reviewers "team-leads"
+
+# Post-merge quality tracking
+./brigade analyze . --track-quality --output quality-metrics.json
+```
+
+### **Team Roles & Permissions**
+
+#### **👑 Team Lead**
+```bash
+# Approve team-wide fixes
+./brigade approve --team-lead --list-all
+
+# Configure team standards
+./brigade config --set team-quality-threshold 8
+./brigade config --set auto-fix-policy "lead-approval"
+
+# Generate team reports
+./brigade report --team-summary --period weekly
+```
+
+#### **🧑‍💻 Developer**
+```bash
+# Individual code analysis
+./brigade analyze my-feature.py --personal
+
+# Request team review
+./brigade analyze my-changes/ --request-review --assignee "team-lead"
+
+# Self-service fixes
+./brigade auto-fix my-code.py --self-approve --max-changes 5
+```
+
+#### **👀 Code Reviewer**
+```bash
+# Review-focused analysis
+./brigade analyze pr-files/ --review-mode --output review-checklist.md
+
+# Suggest improvements during review
+./brigade auto-fix reviewed-code.py --suggestions-only
+
+# Validate fix quality
+./brigade analyze fixed-files/ --validate-fixes
+```
+
+### **Team Configuration**
+
+#### **team-config.json**
+```json
+{
+  "team": {
+    "name": "Backend Team",
+    "quality_threshold": 7,
+    "auto_fix_policy": "lead_approval",
+    "notification_channels": ["#backend-alerts", "#code-quality"]
+  },
+  "workflows": {
+    "pre_merge": {
+      "quality_gate": true,
+      "security_scan": true,
+      "team_review": true
+    },
+    "daily_analysis": {
+      "enabled": true,
+      "schedule": "09:00",
+      "scope": "changed_files"
+    }
+  },
+  "permissions": {
+    "team_leads": ["alice", "bob"],
+    "auto_approve_threshold": 5,
+    "require_review_above": 10
+  }
+}
+```
+
+### **Team Metrics & Reporting**
+
+#### **📊 Quality Dashboard**
+```bash
+# Generate team quality dashboard
+./brigade report --dashboard --team --output team-dashboard.html
+
+# Track quality trends
+./brigade metrics --quality-trend --period 30days --output quality-trend.json
+
+# Compare team performance
+./brigade metrics --team-comparison --output team-comparison.md
+```
+
+#### **📈 Progress Tracking**
+```bash
+# Sprint quality progress
+./brigade report --sprint-progress --output sprint-quality.json
+
+# Technical debt tracking
+./brigade metrics --technical-debt --trend --output debt-trend.json
+
+# Team productivity metrics
+./brigade report --productivity --team --period weekly
+```
+
+### **Integration with Team Tools**
+
+#### **🔗 Slack Integration**
+```bash
+# Configure Slack notifications
+./brigade config --slack-webhook "https://hooks.slack.com/..."
+./brigade config --slack-channel "#code-quality"
+
+# Daily quality reports to Slack
+./brigade report --daily --slack --channel "#team-updates"
+```
+
+#### **📋 Jira Integration**
+```bash
+# Link fixes to Jira tickets
+./brigade auto-fix . --jira-link --project "TEAM"
+
+# Create technical debt tickets
+./brigade analyze . --create-jira-tickets --assignee "team-lead"
+
+# Update story points based on complexity
+./brigade analyze backlog/ --update-story-points --jira-project "TEAM"
+```
+
+#### **🐙 GitHub Integration**
+```bash
+# Team PR templates with BRIGADE analysis
+./brigade config --pr-template --team-standards
+
+# Automated team reviews
+./brigade auto-fix . --create-pr --team-reviewers --draft
+
+# Quality status checks
+./brigade analyze . --github-status --required-checks
+```
+
+### **Team Best Practices**
+
+#### **🎯 Quality Standards**
+- **Minimum Quality Score**: 7/10 for production code
+- **Security Issues**: Zero tolerance, immediate fix required
+- **Code Coverage**: Maintain above 80% with BRIGADE validation
+- **Technical Debt**: Weekly team review and prioritization
+
+#### **🔄 Workflow Integration**
+```bash
+# Morning team quality check
+./brigade analyze . --team-daily --notify-slack
+
+# Pre-standup code health
+./brigade report --team-health --brief
+
+# End-of-sprint quality review
+./brigade report --sprint-summary --team --detailed
+```
+
+#### **📚 Knowledge Sharing**
+```bash
+# Generate team learning reports
+./brigade report --learning-opportunities --team
+
+# Share best practices
+./brigade analyze . --extract-patterns --share-team
+
+# Mentor new team members
+./brigade analyze junior-code/ --mentoring-mode --suggestions
+```
+
+### **Scaling for Large Teams**
+
+#### **🏢 Multi-Team Coordination**
+```bash
+# Cross-team analysis
+./brigade analyze . --multi-team --teams "backend,frontend,mobile"
+
+# Organization-wide standards
+./brigade config --org-standards --apply-all-teams
+
+# Inter-team dependency analysis
+./brigade analyze . --team-dependencies --output team-deps.json
+```
+
+#### **📊 Management Reporting**
+```bash
+# Executive quality summary
+./brigade report --executive --all-teams --monthly
+
+# Team performance comparison
+./brigade metrics --team-rankings --quality-focused
+
+# ROI analysis for code quality
+./brigade report --roi-analysis --team-investment
+```
+
 ## 🎯 Use Cases
 
 ### **Individual Developer**
@@ -205,22 +451,40 @@ BRIGADE/
 ./brigade auto-fix myfile.py --create-pr
 ```
 
-### **Team Code Review**
+### **Small Team (2-5 developers)**
 ```bash
-# Pre-review analysis
+# Team code review preparation
 ./brigade analyze src/ --recursive --report team_review.md
 
-# Coordinated improvement
-./brigade deploy critical_file.py --mode full
+# Coordinated improvement with team approval
+./brigade deploy critical_file.py --mode team --reviewers "team-lead"
+
+# Daily team quality standup
+./brigade report --team-daily --brief
 ```
 
-### **CI/CD Integration**
+### **Large Team (5+ developers)**
 ```bash
-# Quality gate deployment
+# Multi-team coordination
+./brigade analyze . --multi-team --teams "backend,frontend"
+
+# Organization-wide quality standards
+./brigade deploy . --mode organization --quality-gate
+
+# Executive reporting
+./brigade report --executive --all-teams --monthly
+```
+
+### **Enterprise Integration**
+```bash
+# CI/CD pipeline integration
 ./brigade analyze . --recursive --output quality_gate.json
 
-# Automated improvement pipeline
-./brigade auto-fix changed_files.py --create-pr
+# Automated improvement pipeline with governance
+./brigade auto-fix . --enterprise-mode --compliance-check
+
+# Cross-project analysis and reporting
+./brigade analyze multiple-repos/ --enterprise-dashboard
 ```
 
 ## ⚙️ Configuration
