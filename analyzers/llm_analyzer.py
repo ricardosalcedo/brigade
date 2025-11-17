@@ -1,6 +1,6 @@
 """LLM-based code analysis implementation"""
 
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from core.base import AnalysisResult, BaseAnalyzer
 from core.exceptions import AnalysisError
@@ -83,7 +83,8 @@ Provide analysis in this JSON format:
 {{
     "quality_score": <1-10>,
     "issues": [
-        {{"type": "security|performance|style|bug", "severity": "high|medium|low", "description": "...", "line": <number>}}
+        {{"type": "security|performance|style|bug", "severity": "high|medium|low",
+          "description": "...", "line": <number>}}
     ],
     "recommendations": ["specific actionable advice"],
     "overall_assessment": "brief summary"

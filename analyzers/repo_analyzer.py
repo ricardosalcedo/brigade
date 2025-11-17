@@ -1,11 +1,10 @@
 """Repository-wide analysis with context management"""
 
-import json
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from analyzers.unified_analyzer import UnifiedAnalyzer
 from core.base import AnalysisResult, BaseAnalyzer

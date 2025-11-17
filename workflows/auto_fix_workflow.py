@@ -6,7 +6,6 @@ from analyzers.unified_analyzer import UnifiedAnalyzer
 from core.approval import ApprovalManager
 from core.base import AnalysisResult
 from core.config import Config
-from core.exceptions import AnalysisError, FixGenerationError
 
 
 class AutoFixWorkflow:
