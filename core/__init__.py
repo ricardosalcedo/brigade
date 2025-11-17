@@ -7,8 +7,12 @@ Provides base classes, interfaces, and common functionality.
 from .approval import ApprovalManager
 from .base import BaseAgent, BaseAnalyzer, BaseTool
 from .config import Config
-from .exceptions import (AnalysisError, FixGenerationError, PRCreationError,
-                         TestFailureError)
+from .exceptions import (
+    AnalysisError,
+    FixGenerationError,
+    PRCreationError,
+    TestFailureError,
+)
 from .interfaces import ICodeAnalyzer, IFixGenerator, IPRManager, ITestRunner
 from .utils import FileUtils, GitUtils, LLMUtils
 

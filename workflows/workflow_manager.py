@@ -7,8 +7,7 @@ from analyzers.unified_analyzer import UnifiedAnalyzer
 from core.base import AnalysisResult
 from core.config import Config
 from core.exceptions import AnalysisError
-from core.interfaces import (ICodeAnalyzer, IFixGenerator, IPRManager,
-                             ITestRunner)
+from core.interfaces import ICodeAnalyzer, IFixGenerator, IPRManager, ITestRunner
 
 
 class WorkflowType(Enum):
