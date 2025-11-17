@@ -48,6 +48,15 @@ chmod +x brigade
 
 ## 🎖️ Brigade Commands
 
+### **Testing Brigade**
+AI-powered test generation and validation:
+```bash
+./brigade test myfile.py                    # Analyze testability
+./brigade test myfile.py --generate         # Generate AI test cases
+./brigade test test_myfile.py --run         # Run tests with results
+./brigade test myfile.py --validate         # Validate test coverage
+```
+
 ### **Repository Analysis**
 Analyze entire repositories without context overflow:
 ```bash
@@ -523,6 +532,164 @@ export DEFAULT_BRANCH=main
 - **⚡ Efficiency**: Optimized workflows for maximum impact
 - **🛡️ Reliability**: Robust error handling and recovery
 - **📈 Excellence**: Continuous improvement and learning
+
+## 🧪 AI-Powered Testing with BRIGADE
+
+BRIGADE provides comprehensive AI-powered testing capabilities to help you write better tests and improve code quality:
+
+### **🎯 Testing Capabilities**
+
+#### **Testability Analysis**
+Analyze how testable your code is and get recommendations:
+```bash
+# Analyze code testability
+./brigade test myfile.py
+
+# Get detailed testability report
+./brigade test myfile.py --verbose
+```
+
+**Example Output:**
+```
+🧪 BRIGADE Testing Brigade
+📁 Target: core/config.py
+🔍 Analyzing code testability...
+
+📊 Testability Analysis:
+   Score: 6.9/10
+
+⚠️ Testing Issues:
+   coverage: No existing tests found - consider adding test coverage
+
+💡 Recommendations:
+   Create test file for config.py
+   Add unit tests for individual functions
+   Set up continuous testing with pytest or similar framework
+
+🎯 Suggested Test Types: integration, unit
+```
+
+#### **AI Test Generation**
+Generate intelligent test cases automatically:
+```bash
+# Generate basic unit tests
+./brigade test myfile.py --generate
+
+# Generate specific test types
+./brigade test myfile.py --generate --test-types unit integration edge_case
+
+# Save generated tests to file
+./brigade test myfile.py --generate --output test_myfile.py
+
+# Generate tests as JSON for custom processing
+./brigade test myfile.py --generate --output tests.json
+```
+
+**Generated Test Example:**
+```python
+#!/usr/bin/env python3
+"""AI-generated test cases by BRIGADE"""
+
+import pytest
+
+class TestConfig:
+    """Test cases for Config class"""
+    
+    def setup_method(self):
+        """Set up test fixtures"""
+        self.instance = Config()
+    
+    def test_config_creation(self):
+        """Test Config instance creation"""
+        assert self.instance is not None
+
+def test_from_env_basic():
+    """Test basic functionality of from_env"""
+    # TODO: Add test implementation
+    # result = from_env(test_input)
+    # assert result == expected_output
+    pass
+```
+
+#### **Test Execution & Coverage**
+Run tests and analyze coverage:
+```bash
+# Run existing tests
+./brigade test test_myfile.py --run
+
+# Run tests with coverage analysis
+./brigade test test_myfile.py --run --coverage
+
+# Validate test coverage for source file
+./brigade test myfile.py --validate
+```
+
+**Test Results Example:**
+```
+🏃 Running tests...
+
+📊 Test Results:
+   Status: ✅ PASSED
+   Tests: 12
+   Coverage: 87.5%
+
+💡 Recommendations:
+   Increase test coverage to at least 90%
+   Add tests for 3 uncovered lines
+```
+
+### **🎯 Test Types Supported**
+
+- **Unit Tests**: Test individual functions and methods in isolation
+- **Integration Tests**: Test component interactions and workflows  
+- **Edge Case Tests**: Test boundary conditions and error scenarios
+
+### **🔍 Testability Factors Analyzed**
+
+BRIGADE analyzes multiple factors to determine code testability:
+
+- **Structure**: Functions, classes, and modular design
+- **Complexity**: Cyclomatic complexity and nested logic
+- **Dependencies**: External imports and coupling
+- **Side Effects**: File I/O, network calls, randomness
+- **Existing Tests**: Current test coverage and patterns
+
+### **🛠️ Testing Workflow**
+
+1. **Analyze**: `./brigade test myfile.py` - Check testability score
+2. **Generate**: `./brigade test myfile.py --generate` - Create AI test cases  
+3. **Refine**: Edit generated tests to match your specific needs
+4. **Run**: `./brigade test test_myfile.py --run --coverage` - Execute and measure
+5. **Validate**: `./brigade test myfile.py --validate` - Ensure adequate coverage
+
+### **💡 Testing Best Practices**
+
+BRIGADE helps enforce testing best practices:
+
+- **Dependency Injection**: Recommendations for testable architecture
+- **Mocking Strategies**: Guidance for external dependencies
+- **Test Organization**: Proper test structure and naming
+- **Coverage Goals**: Maintain 80%+ test coverage
+- **Continuous Testing**: Integration with CI/CD pipelines
+
+### **🚀 Advanced Testing Features**
+
+```bash
+# Generate comprehensive test suite for entire module
+./brigade test mymodule/ --generate --test-types unit integration edge_case
+
+# Analyze testing gaps across codebase
+./brigade repo . --categories core tests --output testing-analysis.json
+
+# Generate tests with specific focus areas
+./brigade test myfile.py --generate --focus security performance
+```
+
+This AI-powered testing approach helps you:
+- **Write better tests faster** with intelligent generation
+- **Identify testing gaps** through comprehensive analysis
+- **Improve code quality** with testability recommendations
+- **Maintain high coverage** with automated validation
 
 ## 🔍 Full Repository Analysis (No Context Limits)
 

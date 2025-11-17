@@ -62,6 +62,26 @@ Examples:
         deploy_parser.add_argument('--mode', choices=['analysis', 'coordinated', 'full'], 
                                   default='coordinated', help='Brigade deployment mode')
         
+        # Test command
+        test_parser = subparsers.add_parser('test', help='AI-powered testing capabilities')
+        test_parser.add_argument('path', help='File or directory to test')
+        test_parser.add_argument('--generate', action='store_true',
+                               help='Generate AI-powered test cases')
+        test_parser.add_argument('--run', action='store_true',
+                               help='Run existing tests')
+        test_parser.add_argument('--coverage', action='store_true',
+                               help='Include coverage analysis')
+        test_parser.add_argument('--test-types', nargs='+',
+                               choices=['unit', 'integration', 'edge_case'],
+                               default=['unit'],
+                               help='Types of tests to generate')
+        test_parser.add_argument('--output', '-o', help='Save generated tests to file')
+        test_parser.add_argument('--validate', action='store_true',
+                               help='Validate test coverage')
+        test_parser.add_argument('--config', help='Configuration file path')
+        test_parser.add_argument('--verbose', '-v', action='store_true',
+                               help='Verbose output')
+        
         # Repository analysis command
         repo_parser = subparsers.add_parser('repo', help='Analyze entire repository')
         repo_parser.add_argument('path', help='Repository path to analyze')
@@ -119,6 +139,8 @@ Examples:
                 return self._deploy_autofix_brigade(args)
             elif args.command == 'deploy':
                 return self._deploy_coordinated_brigade(args)
+            elif args.command == 'test':
+                return self._run_testing_brigade(args)
             elif args.command == 'repo':
                 return self._analyze_repository(args)
             elif args.command == 'approve':
@@ -348,6 +370,120 @@ Examples:
         
         with open(report_path, 'w') as f:
             f.write(report)
+    
+    def _run_testing_brigade(self, args):
+        """Run AI-powered testing capabilities"""
+        from analyzers.test_analyzer import TestAnalyzer
+        
+        print(f"🧪 BRIGADE Testing Brigade")
+        print(f"📁 Target: {args.path}")
+        
+        try:
+            analyzer = TestAnalyzer()
+            
+            if args.generate:
+                print("🤖 Generating AI-powered test cases...")
+                generated_tests = analyzer.generate_tests(args.path, args.test_types)
+                
+                print(f"✅ Generated {len(generated_tests)} test cases")
+                
+                for test in generated_tests:
+                    print(f"\n📝 {test.test_name} ({test.test_type})")
+                    print(f"   Confidence: {test.confidence:.1f}")
+                    print(f"   Description: {test.description}")
+                
+                if args.output:
+                    self._save_generated_tests(generated_tests, args.output)
+                    print(f"💾 Tests saved to {args.output}")
+            
+            elif args.run:
+                print("🏃 Running tests...")
+                test_result = analyzer.run_tests(args.path, args.coverage)
+                
+                print(f"\n📊 Test Results:")
+                print(f"   Status: {'✅ PASSED' if test_result.passed else '❌ FAILED'}")
+                print(f"   Tests: {test_result.test_count}")
+                
+                if test_result.coverage:
+                    print(f"   Coverage: {test_result.coverage:.1f}%")
+                
+                if test_result.failures:
+                    print(f"\n❌ Failures:")
+                    for failure in test_result.failures:
+                        print(f"   {failure}")
+                
+                if args.verbose:
+                    print(f"\n📋 Full Output:")
+                    print(test_result.output)
+            
+            elif args.validate:
+                print("🔍 Validating test coverage...")
+                # Assume test file exists alongside source
+                test_path = args.path.replace('.py', '_test.py')
+                coverage_info = analyzer.validate_test_coverage(args.path, test_path)
+                
+                print(f"📊 Coverage: {coverage_info['coverage']:.1f}%")
+                
+                if coverage_info['recommendations']:
+                    print(f"\n💡 Recommendations:")
+                    for rec in coverage_info['recommendations']:
+                        print(f"   {rec}")
+            
+            else:
+                # Default: analyze testability
+                print("🔍 Analyzing code testability...")
+                analysis = analyzer.analyze_testability(args.path)
+                
+                print(f"\n📊 Testability Analysis:")
+                print(f"   Score: {analysis['testability_score']:.1f}/10")
+                
+                if analysis['testing_issues']:
+                    print(f"\n⚠️ Testing Issues:")
+                    for issue in analysis['testing_issues']:
+                        print(f"   {issue['type']}: {issue['description']}")
+                
+                print(f"\n💡 Recommendations:")
+                for rec in analysis['test_recommendations']:
+                    print(f"   {rec}")
+                
+                print(f"\n🎯 Suggested Test Types: {', '.join(analysis['suggested_test_types'])}")
+            
+            return 0
+            
+        except Exception as e:
+            print(f"❌ Testing failed: {e}")
+            if args.verbose:
+                import traceback
+                traceback.print_exc()
+            return 1
+    
+    def _save_generated_tests(self, tests, output_path):
+        """Save generated tests to file"""
+        if output_path.endswith('.py'):
+            # Save as Python test file
+            content = "#!/usr/bin/env python3\n"
+            content += '"""AI-generated test cases by BRIGADE"""\n\n'
+            content += "import pytest\n\n"
+            
+            for test in tests:
+                content += test.test_code + "\n\n"
+            
+            with open(output_path, 'w') as f:
+                f.write(content)
+        else:
+            # Save as JSON
+            test_data = []
+            for test in tests:
+                test_data.append({
+                    'name': test.test_name,
+                    'code': test.test_code,
+                    'type': test.test_type,
+                    'confidence': test.confidence,
+                    'description': test.description
+                })
+            
+            with open(output_path, 'w') as f:
+                json.dump(test_data, f, indent=2)
     
     def _analyze_directory(self, directory: str, recursive: bool) -> Dict[str, Any]:
         """Analyze all files in directory"""
