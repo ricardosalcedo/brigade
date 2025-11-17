@@ -1,0 +1,7 @@
+{
+  "tests/integration/test_brigade_cli.py": true, 
+  "tests/unit/test_approval.py": true, 
+  "tests/unit/test_auto_fix_workflow.py": true, 
+  "tests/unit/test_config.py": true, 
+  "tests/unit/test_static_analyzer.py": true
+}

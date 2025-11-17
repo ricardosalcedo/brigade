@@ -28,7 +28,7 @@ jobs:
         pip install -r requirements-test.txt
     
     - name: Run BRIGADE Test Suite
-      run: python run_tests.py
+      run: python3 run_tests.py
     
     - name: Upload coverage reports
       uses: codecov/codecov-action@v3

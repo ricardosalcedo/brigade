@@ -8,31 +8,31 @@ from pathlib import Path
 
 def run_command(cmd, description):
     """Run command and return success status"""
-    print(f"🧪 {description}...")
+    print("Running {}...".format(description))
     try:
         result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
-        print(f"✅ {description} passed")
+        print("PASS: {}".format(description))
         return True
     except subprocess.CalledProcessError as e:
-        print(f"❌ {description} failed")
+        print("FAIL: {}".format(description))
         if e.stdout:
-            print(f"STDOUT: {e.stdout}")
+            print("STDOUT: {}".format(e.stdout))
         if e.stderr:
-            print(f"STDERR: {e.stderr}")
+            print("STDERR: {}".format(e.stderr))
         return False
 
 def main():
     """Run all tests"""
-    print("🎖️ BRIGADE Test Suite")
+    print("BRIGADE Test Suite")
     print("=" * 30)
     
     # Change to project directory
-    os.chdir(Path(__file__).parent)
+    os.chdir(str(Path(__file__).parent))
     
     # Install test dependencies
-    print("📦 Installing test dependencies...")
-    if not run_command("pip install -r requirements-test.txt", "Installing test dependencies"):
-        print("⚠️ Could not install test dependencies, continuing anyway...")
+    print("Installing test dependencies...")
+    if not run_command("pip3 install -r requirements-test.txt", "Installing test dependencies"):
+        print("WARNING: Could not install test dependencies, continuing anyway...")
     
     # Run tests
     tests_passed = 0
@@ -40,12 +40,12 @@ def main():
     
     # Unit tests
     total_tests += 1
-    if run_command("python -m pytest tests/unit/ -v", "Unit tests"):
+    if run_command("python3 -m pytest tests/unit/ -v", "Unit tests"):
         tests_passed += 1
     
     # Integration tests
     total_tests += 1
-    if run_command("python -m pytest tests/integration/ -v", "Integration tests"):
+    if run_command("python3 -m pytest tests/integration/ -v", "Integration tests"):
         tests_passed += 1
     
     # Code quality checks
@@ -75,15 +75,15 @@ def main():
         tests_passed += 1
     
     # Summary
-    print(f"\n📊 Test Results:")
-    print(f"   Passed: {tests_passed}/{total_tests}")
-    print(f"   Success Rate: {tests_passed/total_tests*100:.1f}%")
+    print("\nTest Results:")
+    print("   Passed: {}/{}".format(tests_passed, total_tests))
+    print("   Success Rate: {:.1f}%".format(tests_passed/total_tests*100))
     
     if tests_passed == total_tests:
-        print("✅ All tests passed!")
+        print("All tests passed!")
         return 0
     else:
-        print("❌ Some tests failed")
+        print("Some tests failed")
         return 1
 
 if __name__ == "__main__":
