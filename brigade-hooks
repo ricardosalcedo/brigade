@@ -23,11 +23,40 @@ case "$1" in
         echo "Pre-commit hook installed and made executable"
         ;;
         
+    "secrets")
+        case "$2" in
+            "scan")
+                echo "Scanning repository for secrets..."
+                git secrets --scan
+                ;;
+            "list")
+                echo "Git-secrets patterns:"
+                git secrets --list
+                ;;
+            "add")
+                if [ -z "$3" ]; then
+                    echo "Usage: $0 secrets add <pattern>"
+                    echo "Example: $0 secrets add 'secret_key.*=.*'"
+                else
+                    git secrets --add "$3"
+                    echo "Added pattern: $3"
+                fi
+                ;;
+            *)
+                echo "Git-secrets commands:"
+                echo "  secrets scan     - Scan repository for secrets"
+                echo "  secrets list     - List configured patterns"
+                echo "  secrets add <pattern> - Add custom pattern"
+                ;;
+        esac
+        ;;
+        
     "status")
         echo "BRIGADE Pre-commit Hook Status"
         echo "=============================="
         echo "Hook file: $([ -f .git/hooks/pre-commit ] && echo "✅ Exists" || echo "❌ Missing")"
         echo "Executable: $([ -x .git/hooks/pre-commit ] && echo "✅ Yes" || echo "❌ No")"
+        echo "Git-secrets: $(git secrets --list > /dev/null 2>&1 && echo "✅ Configured" || echo "❌ Not configured")"
         echo "Docker: $(docker info > /dev/null 2>&1 && echo "✅ Running" || echo "❌ Not running")"
         echo "Act: $(which act > /dev/null && echo "✅ Installed" || echo "❌ Not installed")"
         echo ""
@@ -35,6 +64,10 @@ case "$1" in
             echo "Configuration:"
             cat .brigade-hooks.conf | grep -v "^#" | grep -v "^$"
         fi
+        echo ""
+        echo "Git-secrets patterns:"
+        git secrets --list 2>/dev/null | head -5
+        [ $(git secrets --list 2>/dev/null | wc -l) -gt 5 ] && echo "... and more"
         ;;
         
     *)
@@ -47,11 +80,13 @@ case "$1" in
         echo "  test                   - Test the pre-commit hook"
         echo "  install                - Install and enable the hook"
         echo "  status                 - Show hook status and configuration"
+        echo "  secrets <cmd>          - Git-secrets management"
         echo ""
         echo "Examples:"
         echo "  $0 mode fast          # Set to fast mode (default)"
         echo "  $0 mode act           # Set to full GitHub Actions mode"
         echo "  $0 test               # Test the current hook"
+        echo "  $0 secrets scan       # Scan for secrets in repository"
         echo "  $0 status             # Check hook status"
         ;;
 esac
