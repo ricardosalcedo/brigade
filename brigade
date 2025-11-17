@@ -130,8 +130,8 @@ Examples:
                 self.config = self._load_config(args.config)
                 self.workflow_manager = WorkflowManager(self.config)
             
-            # Validate path
-            if not Path(args.path).exists():
+            # Validate path for commands that need it
+            if hasattr(args, 'path') and args.path and not Path(args.path).exists():
                 print(f"❌ Target not found: {args.path}")
                 return 1
             

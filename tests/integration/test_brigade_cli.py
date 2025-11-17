@@ -41,7 +41,7 @@ def file_leak(filename):
         )
 
         assert result.returncode == 0
-        assert "Deploy analysis agents" in result.stdout
+        assert "File or directory to analyze" in result.stdout
         assert "--recursive" in result.stdout
         assert "--output" in result.stdout
 
@@ -52,7 +52,7 @@ def file_leak(filename):
         )
 
         assert result.returncode == 0
-        assert "Deploy fix agents" in result.stdout
+        assert "Create pull request" in result.stdout
         assert "--create-pr" in result.stdout
         assert "--dry-run" in result.stdout
 
@@ -63,7 +63,7 @@ def file_leak(filename):
         )
 
         assert result.returncode == 0
-        assert "Manage pending PR approvals" in result.stdout
+        assert "List pending approvals" in result.stdout
         assert "--list" in result.stdout
         assert "--approve" in result.stdout
 
@@ -132,4 +132,4 @@ def file_leak(filename):
         result = subprocess.run(["./brigade"], capture_output=True, text=True, cwd=".")
 
         assert result.returncode == 1
-        assert "No command specified" in result.stdout
+        assert "BRIGADE - Coordinated Code Intelligence" in result.stdout
